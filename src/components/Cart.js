@@ -35,7 +35,7 @@ const Cart = ({ storeId }) => {
         {cart.map((item, index) => (
           <ListItem key={index}>
             <ListItemText
-              primary={`Item ID: ${item.name}`}
+              primary={`Item : ${item.itemName}`}
               secondary={`Quantity: ${item.quantity}`}
             />
           </ListItem>

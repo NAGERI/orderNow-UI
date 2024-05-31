@@ -30,7 +30,7 @@ const OrdersPage = () => {
       }
     };
     fetchOrders();
-  }, [token]);
+  }, [token, orders]);
 
   function getOrderItemPrices(order) {
     const price = order.orderItems.map((orderItem) => orderItem.item.price);

@@ -4,7 +4,6 @@ import {
   TextField,
   Button,
   Box,
-  Container,
   Typography,
   IconButton,
   InputAdornment,
@@ -43,9 +42,27 @@ const LoginPage = () => {
     event.preventDefault();
   };
   return (
-    <Container maxWidth="sm">
-      <Box mt={8}>
-        <Typography variant="h4" component="h1" gutterBottom>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100vh"
+      sx={{ backgroundColor: "#f0f2f5" }}
+    >
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        p={3}
+        sx={{ backgroundColor: "#fff", borderRadius: 1, boxShadow: 3 }}
+      >
+        <Typography
+          variant="h4"
+          component="h1"
+          alignItems="center"
+          gutterBottom
+        >
           Login
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -98,7 +115,7 @@ const LoginPage = () => {
           </Typography>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 
