@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { placeOrder } from "../store/orderSlice";
 import {
   Button,
   List,
@@ -7,14 +6,15 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { placeOrder } from "../store/orderSlice";
 
 const Cart = ({ storeId }) => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.order.cart);
   const orderStatus = useSelector((state) => state.order.orderStatus);
-  const error = useSelector((state) => state.order.error);
+  const error = useSelector((state) => state.payment.error);
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     const orderData = {
       storeId,
       items: cart.map((item) => ({
@@ -22,7 +22,7 @@ const Cart = ({ storeId }) => {
         quantity: item.quantity,
       })),
     };
-    dispatch(placeOrder(orderData));
+    await dispatch(placeOrder(orderData));
   };
 
   return (

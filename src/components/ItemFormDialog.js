@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogActions,
@@ -8,35 +7,34 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { addItem, updateItem } from "../store/itemSlice";
 
-const ItemFormDialog = ({ open, handleClose, item, storeId }) => {
-  const dispatch = useDispatch();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
+const ItemFormDialog = ({ open, onSubmit, handleClose, item }) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: 10,
+  });
 
   useEffect(() => {
     if (item) {
-      setName(item.name);
-      setDescription(item.description);
-      setPrice(item.price);
-    } else {
-      setName("");
-      setDescription("");
-      setPrice("");
+      setFormData({
+        name: item.name || "",
+        description: item.description || "",
+        price: item.price || 10,
+      });
     }
   }, [item]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const newItem = { name, description, price, storeId };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-    if (item) {
-      dispatch(updateItem({ ...item, ...newItem, storeId }));
-    } else {
-      dispatch(addItem(newItem));
-    }
+  const handleSubmit = () => {
+    onSubmit(formData);
     handleClose();
   };
 
@@ -52,8 +50,8 @@ const ItemFormDialog = ({ open, handleClose, item, storeId }) => {
             type="text"
             fullWidth
             required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={formData.name}
+            onChange={handleChange}
           />
           <TextField
             margin="dense"
@@ -62,9 +60,9 @@ const ItemFormDialog = ({ open, handleClose, item, storeId }) => {
             fullWidth
             rows={4}
             required
-            value={description}
+            value={formData.description}
             style={{ marginTop: "1em" }}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={handleChange}
           />
           <TextField
             margin="dense"
@@ -72,8 +70,8 @@ const ItemFormDialog = ({ open, handleClose, item, storeId }) => {
             type="number"
             fullWidth
             required
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            value={formData.price}
+            onChange={handleChange}
           />
         </DialogContent>
         <DialogActions>
@@ -83,7 +81,9 @@ const ItemFormDialog = ({ open, handleClose, item, storeId }) => {
           <Button
             type="submit"
             color="primary"
-            disabled={!price || !description || !name}
+            disabled={
+              !formData.price || !formData.description || !formData.name
+            }
           >
             {item ? "Update" : "Create"}
           </Button>

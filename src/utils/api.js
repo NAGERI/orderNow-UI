@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const API_URL = process.env.REACT_APP_API_URL;
-const api = axios.create({
+export const api = axios.create({
   baseURL: API_URL,
 });
 
@@ -55,12 +55,8 @@ export const getUserDetails = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-export const getOrdersByUser = (token) =>
-  api.get("/orders/by-user", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-export const getOrderStatusAmount = (token) =>
-  api.get("/orders/status-and-quantity", {
+export const getPendingOrdersByUser = (token) =>
+  api.get("/orders/pending-by-user", {
     headers: { Authorization: `Bearer ${token}` },
   });
 

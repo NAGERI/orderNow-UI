@@ -5,7 +5,6 @@ export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
   const token = localStorage.getItem("token");
   if (token) {
     const response = await getUserDetails(token);
-
     return response.data;
   }
   return null;
@@ -27,7 +26,6 @@ const userSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-        console.log("User fetched successfuly", action.payload);
         state.user = action.payload;
       })
       .addCase(fetchUser.rejected, (state) => {
