@@ -6,7 +6,6 @@ export const placeOrder = createAsyncThunk(
   async (orderData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      console.log(orderData);
       const response = await placeItemsOrder(token, orderData);
       return response.data;
     } catch (error) {

@@ -12,7 +12,7 @@ import {
   Typography,
   TextField,
 } from "@mui/material";
-import { fetchItems } from "../store/itemSlice";
+import { addItem, fetchItems, updateItem } from "../store/itemSlice";
 import ItemFormDialog from "../components/ItemFormDialog";
 import { addItemToCart } from "../store/orderSlice";
 import Cart from "../components/Cart";
@@ -54,18 +54,44 @@ const ItemsPage = () => {
       dispatch(addItemToCart({ itemId, quantity }));
     }
   };
+
+  const handleSubmit = (itemData) => {
+    if (selectedItem) {
+      dispatch(updateItem({ ...selectedItem, ...itemData, storeId }));
+    } else {
+      dispatch(addItem(...itemData, storeId));
+    }
+  };
+
   if (items.length <= 0) {
     return (
       <Container>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mt={3}
-          mb={3}
-        >
-          <Typography variant="h4">Items not found</Typography>;
-        </Box>
+        <List>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mt={3}
+            mb={3}
+          >
+            {user.role === "ADMIN" && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleOpenDialog()}
+              >
+                Create Item
+              </Button>
+            )}
+            <Typography variant="h4">Items not found</Typography>
+          </Box>
+          <ItemFormDialog
+            open={dialogOpen}
+            handleClose={handleCloseDialog}
+            item={selectedItem}
+            onSubmit={handleSubmit}
+          />
+        </List>
       </Container>
     );
   }
@@ -90,7 +116,11 @@ const ItemsPage = () => {
         >
           {cartOpen ? "Hide Cart" : "View Cart"}
         </Button>
-        {cartOpen && <Cart storeId={storeId} />}
+        {cartOpen && (
+          <Container>
+            <Cart storeId={storeId} />
+          </Container>
+        )}
 
         <List>
           {items.map((item) => (
@@ -126,8 +156,8 @@ const ItemsPage = () => {
         <ItemFormDialog
           open={dialogOpen}
           handleClose={handleCloseDialog}
+          onSubmit={handleSubmit}
           item={selectedItem}
-          storeId={storeId}
         />
       </Box>
     </Container>

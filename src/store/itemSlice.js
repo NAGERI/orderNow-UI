@@ -13,6 +13,7 @@ export const fetchItems = createAsyncThunk(
 export const addItem = createAsyncThunk("item/addItem", async (item) => {
   const token = localStorage.getItem("token");
   const response = await createStoreItem(item, token);
+  console.log(response);
   return response.data;
 });
 

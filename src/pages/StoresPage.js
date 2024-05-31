@@ -62,7 +62,24 @@ const StorePage = () => {
           mt={3}
           mb={3}
         >
-          <Typography variant="h4">Restaurants not found</Typography>;
+          <List>
+            {user && user.role === "ADMIN" && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleOpenDialog()}
+              >
+                Add Restaurant
+              </Button>
+            )}
+            <Typography variant="h4">Restaurants not found</Typography>
+            <StoreFormDialog
+              open={dialogOpen}
+              onClose={handleCloseDialog}
+              onSubmit={handleSubmit}
+              store={selectedStore}
+            />
+          </List>
         </Box>
       </Container>
     );
