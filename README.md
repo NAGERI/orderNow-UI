@@ -2,11 +2,20 @@
 
 ## Description
 
-This is a multi-tenant aplication. Users can login and order for a hot cup of coffee, a sizzling cold drink, a hot deep fried chicken and any food that is being offered by the restaurants, using the application.
+This is a multi-restaurant aplication. Users can login and order for a hot cup of coffee, a sizzling cold drink, a hot deep fried chicken and any food that is being offered by the restaurants, using the application.
 
-# More Details.
+# Project SetUp.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Install the dependancies
+
+`npm install `
+
+## Create an environment file.
+
+Create a `.env` and include `REACT_APP_API_URL=""` which is the Base URL.
+It should point to the backend.
 
 ## Available Scripts
 
@@ -50,27 +59,3 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
