@@ -41,6 +41,11 @@ export const getStoreItems = (storeId, token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+export const getAStoreItem = (itemId, token) =>
+  api.get(`/items/${itemId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 export const createStoreItem = (itemData, token) =>
   api.post("/items", itemData, {
     headers: { Authorization: `Bearer ${token}` },

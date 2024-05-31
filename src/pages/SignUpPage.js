@@ -5,7 +5,6 @@ import {
   TextField,
   Button,
   Box,
-  Container,
   Typography,
   IconButton,
   InputAdornment,
@@ -37,64 +36,79 @@ const SignUpPage = () => {
     event.preventDefault();
   };
   return (
-    <Container maxWidth="sm">
-      <Box mt={8}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Sign Up
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="username"
-            type="username"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Box mt={2}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={!password.trim() || !username.trim()}
-              fullWidth
-            >
-              Sign Up
-            </Button>
-          </Box>
-        </form>
-        <Box mt={2}>
-          <Typography>
-            Already have an account?
-            <Link to="/login">Sign In</Link>
+    <Box>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+        sx={{ backgroundColor: "#f0f2f5" }}
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          p={3}
+          sx={{ backgroundColor: "#fff", borderRadius: 1, boxShadow: 3 }}
+        >
+          <Typography variant="h4" component="h1" gutterBottom>
+            Sign Up
           </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="username"
+              type="username"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <TextField
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Box mt={2}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={!password.trim() || !username.trim()}
+                fullWidth
+              >
+                Sign Up
+              </Button>
+            </Box>
+          </form>
+          <Box mt={2}>
+            <Typography>
+              Already have an account?
+              <Link to="/login">Sign In</Link>
+            </Typography>
+          </Box>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

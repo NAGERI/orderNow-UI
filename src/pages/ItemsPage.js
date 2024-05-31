@@ -16,6 +16,7 @@ import { addItem, fetchItems, updateItem } from "../store/itemSlice";
 import ItemFormDialog from "../components/ItemFormDialog";
 import { addItemToCart } from "../store/orderSlice";
 import Cart from "../components/Cart";
+import { getAStoreItem } from "../utils/api";
 
 const ItemsPage = () => {
   const { storeId } = useParams();
@@ -48,10 +49,14 @@ const ItemsPage = () => {
     }));
   };
 
-  const handleAddToOrder = (itemId) => {
+  const handleAddToOrder = async (itemId) => {
     const quantity = quantities[itemId];
     if (quantity > 0) {
-      dispatch(addItemToCart({ itemId, quantity }));
+      const token = localStorage.getItem("token");
+      const response = await getAStoreItem(itemId, token);
+      const itemName = response.data.name;
+
+      dispatch(addItemToCart({ itemId, itemName, quantity }));
     }
   };
 
@@ -66,14 +71,14 @@ const ItemsPage = () => {
   if (items.length <= 0) {
     return (
       <Container>
-        <List>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mt={3}
-            mb={3}
-          >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={3}
+          mb={3}
+        >
+          <List>
             {user.role === "ADMIN" && (
               <Button
                 variant="contained"
@@ -84,38 +89,40 @@ const ItemsPage = () => {
               </Button>
             )}
             <Typography variant="h4">Items not found</Typography>
-          </Box>
-          <ItemFormDialog
-            open={dialogOpen}
-            handleClose={handleCloseDialog}
-            item={selectedItem}
-            onSubmit={handleSubmit}
-          />
-        </List>
+            <ItemFormDialog
+              open={dialogOpen}
+              onClose={handleCloseDialog}
+              onSubmit={handleSubmit}
+              item={selectedItem}
+            />
+          </List>
+        </Box>
       </Container>
     );
   }
-
+  // TODO Item Dialog not working.
   return (
     <Container>
-      <Box alignItems="center" mt={3} mb={3}>
-        {user.role === "ADMIN" && (
+      <Box justifyContent="center" alignItems="center" mt={3} mb={3}>
+        <List>
+          {user.role === "ADMIN" && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleOpenDialog()}
+            >
+              Create Item
+            </Button>
+          )}
+
           <Button
             variant="contained"
-            color="primary"
-            onClick={() => handleOpenDialog()}
+            color="secondary"
+            onClick={() => setCartOpen(!cartOpen)}
           >
-            Create Item
+            {cartOpen ? "Hide Cart" : "View Cart"}
           </Button>
-        )}
-
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => setCartOpen(!cartOpen)}
-        >
-          {cartOpen ? "Hide Cart" : "View Cart"}
-        </Button>
+        </List>
         {cartOpen && (
           <Container>
             <Cart storeId={storeId} />
@@ -135,8 +142,7 @@ const ItemsPage = () => {
                 <TextField
                   type="number"
                   label="Quantity"
-                  datatype="number"
-                  value={quantities[item.id] || ""}
+                  value={quantities[item.id] || 0}
                   onChange={(e) =>
                     handleQuantityChange(item.id, parseInt(e.target.value, 10))
                   }
@@ -155,7 +161,7 @@ const ItemsPage = () => {
         </List>
         <ItemFormDialog
           open={dialogOpen}
-          handleClose={handleCloseDialog}
+          onClose={handleCloseDialog}
           onSubmit={handleSubmit}
           item={selectedItem}
         />

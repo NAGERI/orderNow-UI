@@ -42,7 +42,7 @@ const StoreFormDialog = ({ open, onClose, onSubmit, store }) => {
   return (
     <Box
       display="flex"
-      justifyContent="space-between"
+      justifyContent="center"
       alignItems="center"
       mt={3}
       mb={3}
