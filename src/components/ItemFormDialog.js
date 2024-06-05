@@ -46,14 +46,14 @@ const ItemFormDialog = ({ open, onClose, onSubmit, item }) => {
           autoFocus
           margin="normal"
           label="Name"
-          type="text"
+          name="name"
           fullWidth
           required
           value={formData.name}
           onChange={handleChange}
         />
         <TextField
-          margin="normal"
+          name="description"
           label="Description"
           type="text"
           fullWidth
@@ -64,9 +64,9 @@ const ItemFormDialog = ({ open, onClose, onSubmit, item }) => {
           onChange={handleChange}
         />
         <TextField
-          margin="dense"
+          margin="normal"
           label="Price"
-          type="number"
+          name="price"
           fullWidth
           required
           value={formData.price}

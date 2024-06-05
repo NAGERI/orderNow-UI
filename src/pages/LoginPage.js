@@ -67,6 +67,7 @@ const LoginPage = () => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
+            autoFocus
             label="Username"
             variant="outlined"
             fullWidth

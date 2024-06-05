@@ -13,7 +13,6 @@ export const fetchItems = createAsyncThunk(
 export const addItem = createAsyncThunk("item/addItem", async (item) => {
   const token = localStorage.getItem("token");
   const response = await createStoreItem(item, token);
-  console.log(response);
   return response.data;
 });
 
@@ -27,22 +26,22 @@ const itemSlice = createSlice({
   name: "item",
   initialState: {
     items: [],
-    loading: false,
+    status: "idle",
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchItems.pending, (state) => {
-        state.loading = true;
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchItems.fulfilled, (state, action) => {
-        state.loading = false;
+        state.status = "succeeded";
         state.items = action.payload;
       })
       .addCase(fetchItems.rejected, (state, action) => {
-        state.loading = false;
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(addItem.fulfilled, (state, action) => {
@@ -55,6 +54,16 @@ const itemSlice = createSlice({
         if (index !== -1) {
           state.items[index] = action.payload;
         }
+      })
+      .addCase(updateItem.pending, (state) => {
+        state.loading = true;
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(updateItem.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });

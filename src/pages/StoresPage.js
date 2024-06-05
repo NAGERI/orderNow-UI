@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { addStore, fetchStores, updateStore } from "../store/storeSlice";
+import { addStore, fetchStores, updateStoreSlice } from "../store/storeSlice";
 import {
   Container,
   List,
@@ -43,7 +43,7 @@ const StorePage = () => {
 
   const handleSubmit = (storeData) => {
     if (selectedStore) {
-      dispatch(updateStore({ ...selectedStore, ...storeData }));
+      dispatch(updateStoreSlice({ ...selectedStore, ...storeData }));
     } else {
       dispatch(addStore(storeData));
     }

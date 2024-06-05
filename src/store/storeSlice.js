@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createStore, deactivateStore, getAllStores } from "../utils/api";
+import {
+  createStore,
+  deactivateStore,
+  getAllStores,
+  updateStore,
+} from "../utils/api";
 
 export const fetchStores = createAsyncThunk("store/fetchStores", async () => {
   const token = localStorage.getItem("token");
@@ -13,11 +18,12 @@ export const addStore = createAsyncThunk("store/addStore", async (store) => {
   return response.data;
 });
 
-export const updateStore = createAsyncThunk(
+export const updateStoreSlice = createAsyncThunk(
   "store/updateStore",
-  async (id, store) => {
+  async (store) => {
     const token = localStorage.getItem("token");
-    const response = await updateStore(id, store, token);
+    const response = await updateStore(store.id, store, token);
+    console.log(response.data);
     return response.data;
   }
 );
@@ -60,7 +66,7 @@ const storeSlice = createSlice({
       .addCase(addStore.fulfilled, (state, action) => {
         state.stores.push(action.payload);
       })
-      .addCase(updateStore.fulfilled, (state, action) => {
+      .addCase(updateStoreSlice.fulfilled, (state, action) => {
         const index = state.stores.findIndex(
           (store) => store.id === action.payload.id
         );
