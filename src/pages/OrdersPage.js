@@ -16,9 +16,10 @@ import { processPayment } from "../store/paymentSlice";
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
-  const token = localStorage.getItem("token");
   const dispatch = useDispatch();
   const paymentStatus = useSelector((state) => state.payment.status);
+  const token = localStorage.getItem("token");
+  const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -30,6 +31,14 @@ const OrdersPage = () => {
       }
     };
     fetchOrders();
+    const prices = orders.flatMap((order) =>
+      order.orderItems.map((orderItem) => orderItem.item.price)
+    );
+    let totalSum = 0;
+    prices.forEach((price) => {
+      totalSum += price;
+    });
+    setTotalAmount(totalSum);
   }, [token, orders]);
 
   function getOrderItemPrices(order) {
@@ -40,14 +49,6 @@ const OrdersPage = () => {
       qty,
     };
   }
-
-  const prices = orders.flatMap((order) =>
-    order.orderItems.map((orderItem) => orderItem.item.price)
-  );
-  let totalSum = 0;
-  prices.forEach((price) => {
-    totalSum += price;
-  });
 
   const handlePayOrder = async (orderId) => {
     dispatch(processPayment({ orderId }));
@@ -89,7 +90,7 @@ const OrdersPage = () => {
         <Divider style={{ backgroundColor: "#1976d2" }} />
         <ListItem>
           <ListItemText primary={`Total Amount: `} />
-          UGX: {totalSum}
+          UGX: {totalAmount}
         </ListItem>
       </Box>
       <Divider style={{ backgroundColor: "#1976d2" }} />
