@@ -108,6 +108,35 @@ const ItemsPage = () => {
     );
   }
 
+  <Box
+    display="flex"
+    justifyContent="space-between"
+    alignItems="center"
+    mt={3}
+    mb={3}
+  >
+    <List>
+      {user.role === "ADMIN" && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleOpenDialog()}
+        >
+          Create Item
+        </Button>
+      )}
+      <Typography variant="h4">Items not found</Typography>
+      <ItemFormDialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        onSubmit={handleSubmit}
+        item={selectedItem}
+      />
+    </List>
+  </Box>;
+
+  // TODO Item Dialog not working.
+
   return (
     <Container>
       <Box justifyContent="center" alignItems="center" mt={3} mb={3}>
