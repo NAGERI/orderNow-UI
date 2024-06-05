@@ -67,6 +67,7 @@ const ItemFormDialog = ({ open, onClose, onSubmit, item }) => {
           margin="normal"
           label="Price"
           name="price"
+          type="number"
           fullWidth
           required
           value={formData.price}

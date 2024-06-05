@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import StoreFormDialog from "../components/StoreFormDialog";
 import EditIcon from "@mui/icons-material/Edit";
+import GlobalSpinner from "../components/GlobalSpinner";
 
 const StorePage = () => {
   const { storeId } = useParams();
@@ -24,6 +25,8 @@ const StorePage = () => {
   const navigate = useNavigate();
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.user.user);
+  const storeStatus = useSelector((state) => state.store.status);
+  const storeError = useSelector((state) => state.store.error);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedStore, setSelectedStore] = useState(null);
 
@@ -84,10 +87,26 @@ const StorePage = () => {
       </Container>
     );
   }
-  if (stores.error) {
-    <Alert severity="error" onClose={handleCloseDialog}>
-      {stores.error}
-    </Alert>;
+
+  if (storeStatus === "loading") {
+    return (
+      <Container>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <GlobalSpinner />
+        </div>
+      </Container>
+    );
+  }
+
+  if (storeStatus === "failed") {
+    return <Alert severity="error">{storeError}</Alert>;
   }
 
   return (

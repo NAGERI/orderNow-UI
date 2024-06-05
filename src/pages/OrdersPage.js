@@ -16,9 +16,9 @@ import { processPayment } from "../store/paymentSlice";
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
-  const token = localStorage.getItem("token");
   const dispatch = useDispatch();
   const paymentStatus = useSelector((state) => state.payment.status);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -30,7 +30,7 @@ const OrdersPage = () => {
       }
     };
     fetchOrders();
-  }, [token, orders]);
+  }, [token]);
 
   function getOrderItemPrices(order) {
     const price = order.orderItems.map((orderItem) => orderItem.item.price);

@@ -42,6 +42,7 @@ const storeSlice = createSlice({
   initialState: {
     stores: [],
     loading: false,
+    state: "idle",
     error: null,
   },
   reducers: {},
@@ -49,24 +50,32 @@ const storeSlice = createSlice({
     builder
       .addCase(fetchStores.pending, (state) => {
         state.loading = true;
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchStores.fulfilled, (state, action) => {
         state.loading = false;
+        state.status = "succeeded";
         state.stores = action.payload;
       })
       .addCase(fetchStores.rejected, (state, action) => {
         state.loading = false;
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(addStore.rejected, (state, action) => {
         state.loading = false;
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(addStore.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = "succeeded";
         state.stores.push(action.payload);
       })
       .addCase(updateStoreSlice.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = "succeeded";
         const index = state.stores.findIndex(
           (store) => store.id === action.payload.id
         );
@@ -74,7 +83,14 @@ const storeSlice = createSlice({
           state.stores[index] = action.payload;
         }
       })
+      .addCase(updateStoreSlice.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(deleteStore.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = "succeeded";
         state.stores = state.stores.filter(
           (store) => store.id !== action.payload
         );

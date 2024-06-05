@@ -11,6 +11,7 @@ import {
   ListItemButton,
   TextField,
   Alert,
+  Snackbar,
 } from "@mui/material";
 import { addItem, fetchItems, updateItem } from "../store/itemSlice";
 import ItemFormDialog from "../components/ItemFormDialog";
@@ -31,6 +32,7 @@ const ItemsPage = () => {
   const [quantities, setQuantities] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
   const [addItemError, setAddItemError] = useState(null);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchItems(storeId));
@@ -63,6 +65,8 @@ const ItemsPage = () => {
         dispatch(addItemToCart({ itemId, itemName, quantity }));
       } catch (error) {
         setAddItemError(`Failed to add item to cart ${error.message}`);
+        setAlertOpen(true);
+        setTimeout(() => setAlertOpen(false), 5000);
       }
     }
   };
@@ -93,7 +97,15 @@ const ItemsPage = () => {
   }
 
   if (itemStatus === "failed") {
-    return <Alert severity="error">{itemError}</Alert>;
+    return (
+      <Snackbar
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        autoHideDuration={50000}
+      >
+        <Alert severity="error">{itemError}</Alert>
+      </Snackbar>
+    );
   }
 
   return (
@@ -154,7 +166,24 @@ const ItemsPage = () => {
             </ListItem>
           ))}
         </List>
-        {addItemError && <Alert severity="error">{addItemError}</Alert>}
+        {addItemError && (
+          <Snackbar
+            open={alertOpen}
+            onClose={() => setAlertOpen(false)}
+            autoHideDuration={5000}
+          >
+            <Alert severity="error">{addItemError}</Alert>
+          </Snackbar>
+        )}
+        {itemError && (
+          <Snackbar
+            open={alertOpen}
+            onClose={() => setAlertOpen(false)}
+            autoHideDuration={5000}
+          >
+            <Alert severity="error">{itemError}</Alert>
+          </Snackbar>
+        )}
         <ItemFormDialog
           open={dialogOpen}
           onClose={handleCloseDialog}

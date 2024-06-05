@@ -10,17 +10,31 @@ export const fetchItems = createAsyncThunk(
   }
 );
 
-export const addItem = createAsyncThunk("item/addItem", async (item) => {
-  const token = localStorage.getItem("token");
-  const response = await createStoreItem(item, token);
-  return response.data;
-});
+export const addItem = createAsyncThunk(
+  "item/addItem",
+  async (item, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await createStoreItem(item, token);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
-export const updateItem = createAsyncThunk("item/updateItem", async (item) => {
-  const token = localStorage.getItem("token");
-  const response = await updateStoreItem(token, item, item.id);
-  return response.data;
-});
+export const updateItem = createAsyncThunk(
+  "item/updateItem",
+  async (item, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await updateStoreItem(token, item, item.id);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const itemSlice = createSlice({
   name: "item",
