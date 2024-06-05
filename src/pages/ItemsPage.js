@@ -20,6 +20,7 @@ import Cart from "../components/Cart";
 import { getAStoreItem } from "../utils/api";
 import GlobalSpinner from "../components/GlobalSpinner";
 
+
 const ItemsPage = () => {
   const { storeId } = useParams();
   const dispatch = useDispatch();
@@ -58,6 +59,7 @@ const ItemsPage = () => {
   const handleAddToOrder = async (itemId) => {
     const quantity = quantities[itemId];
     if (quantity > 0) {
+
       try {
         const token = localStorage.getItem("token");
         const response = await getAStoreItem(itemId, token);
@@ -68,6 +70,7 @@ const ItemsPage = () => {
         setAlertOpen(true);
         setTimeout(() => setAlertOpen(false), 5000);
       }
+
     }
   };
 
@@ -82,6 +85,7 @@ const ItemsPage = () => {
   if (itemStatus === "loading") {
     return (
       <Container>
+
         <div
           style={{
             display: "flex",
@@ -107,6 +111,37 @@ const ItemsPage = () => {
       </Snackbar>
     );
   }
+
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={3}
+          mb={3}
+        >
+          <List>
+            {user.role === "ADMIN" && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleOpenDialog()}
+              >
+                Create Item
+              </Button>
+            )}
+            <Typography variant="h4">Items not found</Typography>
+            <ItemFormDialog
+              open={dialogOpen}
+              onClose={handleCloseDialog}
+              onSubmit={handleSubmit}
+              item={selectedItem}
+            />
+          </List>
+        </Box>
+      </Container>
+    );
+  }
+  // TODO Item Dialog not working.
 
   return (
     <Container>

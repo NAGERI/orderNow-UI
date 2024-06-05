@@ -47,6 +47,7 @@ const ItemFormDialog = ({ open, onClose, onSubmit, item }) => {
           margin="normal"
           label="Name"
           name="name"
+          type="text"
           fullWidth
           required
           value={formData.name}
@@ -54,6 +55,7 @@ const ItemFormDialog = ({ open, onClose, onSubmit, item }) => {
         />
         <TextField
           name="description"
+          margin="normal"
           label="Description"
           type="text"
           fullWidth
