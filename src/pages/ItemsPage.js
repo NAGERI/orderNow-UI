@@ -9,24 +9,31 @@ import {
   ListItem,
   ListItemText,
   ListItemButton,
-  Typography,
   TextField,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import { addItem, fetchItems, updateItem } from "../store/itemSlice";
 import ItemFormDialog from "../components/ItemFormDialog";
 import { addItemToCart } from "../store/orderSlice";
 import Cart from "../components/Cart";
 import { getAStoreItem } from "../utils/api";
+import GlobalSpinner from "../components/GlobalSpinner";
+
 
 const ItemsPage = () => {
   const { storeId } = useParams();
   const dispatch = useDispatch();
   const items = useSelector((state) => state.item.items);
+  const itemStatus = useSelector((state) => state.item.status);
+  const itemError = useSelector((state) => state.item.error);
   const user = useSelector((state) => state.user.user);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantities, setQuantities] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
+  const [addItemError, setAddItemError] = useState(null);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchItems(storeId));
@@ -52,11 +59,18 @@ const ItemsPage = () => {
   const handleAddToOrder = async (itemId) => {
     const quantity = quantities[itemId];
     if (quantity > 0) {
-      const token = localStorage.getItem("token");
-      const response = await getAStoreItem(itemId, token);
-      const itemName = response.data.name;
 
-      dispatch(addItemToCart({ itemId, itemName, quantity }));
+      try {
+        const token = localStorage.getItem("token");
+        const response = await getAStoreItem(itemId, token);
+        const itemName = response.data.name;
+        dispatch(addItemToCart({ itemId, itemName, quantity }));
+      } catch (error) {
+        setAddItemError(`Failed to add item to cart ${error.message}`);
+        setAlertOpen(true);
+        setTimeout(() => setAlertOpen(false), 5000);
+      }
+
     }
   };
 
@@ -64,13 +78,40 @@ const ItemsPage = () => {
     if (selectedItem) {
       dispatch(updateItem({ ...selectedItem, ...itemData, storeId }));
     } else {
-      dispatch(addItem(...itemData, storeId));
+      dispatch(addItem({ ...itemData, storeId }));
     }
   };
 
-  if (items.length <= 0) {
+  if (itemStatus === "loading") {
     return (
       <Container>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <GlobalSpinner />
+        </div>
+      </Container>
+    );
+  }
+
+  if (itemStatus === "failed") {
+    return (
+      <Snackbar
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        autoHideDuration={50000}
+      >
+        <Alert severity="error">{itemError}</Alert>
+      </Snackbar>
+    );
+  }
+
         <Box
           display="flex"
           justifyContent="space-between"
@@ -101,6 +142,7 @@ const ItemsPage = () => {
     );
   }
   // TODO Item Dialog not working.
+
   return (
     <Container>
       <Box justifyContent="center" alignItems="center" mt={3} mb={3}>
@@ -159,6 +201,24 @@ const ItemsPage = () => {
             </ListItem>
           ))}
         </List>
+        {addItemError && (
+          <Snackbar
+            open={alertOpen}
+            onClose={() => setAlertOpen(false)}
+            autoHideDuration={5000}
+          >
+            <Alert severity="error">{addItemError}</Alert>
+          </Snackbar>
+        )}
+        {itemError && (
+          <Snackbar
+            open={alertOpen}
+            onClose={() => setAlertOpen(false)}
+            autoHideDuration={5000}
+          >
+            <Alert severity="error">{itemError}</Alert>
+          </Snackbar>
+        )}
         <ItemFormDialog
           open={dialogOpen}
           onClose={handleCloseDialog}

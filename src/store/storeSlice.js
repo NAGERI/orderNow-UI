@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createStore, deactivateStore, getAllStores } from "../utils/api";
+import {
+  createStore,
+  deactivateStore,
+  getAllStores,
+  updateStore,
+} from "../utils/api";
 
 export const fetchStores = createAsyncThunk("store/fetchStores", async () => {
   const token = localStorage.getItem("token");
@@ -13,11 +18,12 @@ export const addStore = createAsyncThunk("store/addStore", async (store) => {
   return response.data;
 });
 
-export const updateStore = createAsyncThunk(
+export const updateStoreSlice = createAsyncThunk(
   "store/updateStore",
-  async (id, store) => {
+  async (store) => {
     const token = localStorage.getItem("token");
-    const response = await updateStore(id, store, token);
+    const response = await updateStore(store.id, store, token);
+    console.log(response.data);
     return response.data;
   }
 );
@@ -36,6 +42,7 @@ const storeSlice = createSlice({
   initialState: {
     stores: [],
     loading: false,
+    state: "idle",
     error: null,
   },
   reducers: {},
@@ -43,24 +50,32 @@ const storeSlice = createSlice({
     builder
       .addCase(fetchStores.pending, (state) => {
         state.loading = true;
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchStores.fulfilled, (state, action) => {
         state.loading = false;
+        state.status = "succeeded";
         state.stores = action.payload;
       })
       .addCase(fetchStores.rejected, (state, action) => {
         state.loading = false;
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(addStore.rejected, (state, action) => {
         state.loading = false;
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(addStore.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = "succeeded";
         state.stores.push(action.payload);
       })
-      .addCase(updateStore.fulfilled, (state, action) => {
+      .addCase(updateStoreSlice.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = "succeeded";
         const index = state.stores.findIndex(
           (store) => store.id === action.payload.id
         );
@@ -68,7 +83,14 @@ const storeSlice = createSlice({
           state.stores[index] = action.payload;
         }
       })
+      .addCase(updateStoreSlice.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(deleteStore.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = "succeeded";
         state.stores = state.stores.filter(
           (store) => store.id !== action.payload
         );
