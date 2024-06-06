@@ -12,6 +12,7 @@ import {
   TextField,
   Alert,
   Snackbar,
+  Typography
 } from "@mui/material";
 import { addItem, fetchItems, updateItem } from "../store/itemSlice";
 import ItemFormDialog from "../components/ItemFormDialog";
@@ -68,6 +69,17 @@ const ItemsPage = () => {
         setAlertOpen(true);
         setTimeout(() => setAlertOpen(false), 5000);
       }
+
+      try {
+        const token = localStorage.getItem("token");
+        const response = await getAStoreItem(itemId, token);
+        const itemName = response.data.name;
+        dispatch(addItemToCart({ itemId, itemName, quantity }));
+      } catch (error) {
+        setAddItemError(`Failed to add item to cart ${error.message}`);
+        setAlertOpen(true);
+        setTimeout(() => setAlertOpen(false), 5000);
+      }
     }
   };
 
@@ -95,6 +107,45 @@ const ItemsPage = () => {
       </Container>
     );
   }
+
+  if (itemStatus === "failed") {
+    return (
+      <Snackbar
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        autoHideDuration={50000}
+      >
+        <Alert severity="error">{itemError}</Alert>
+      </Snackbar>
+    );
+  }
+
+  <Box
+    display="flex"
+    justifyContent="space-between"
+    alignItems="center"
+    mt={3}
+    mb={3}
+  >
+    <List>
+      {user.role === "ADMIN" && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleOpenDialog()}
+        >
+          Create Item
+        </Button>
+      )}
+      <Typography variant="h4">Items not found</Typography>
+      <ItemFormDialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        onSubmit={handleSubmit}
+        item={selectedItem}
+      />
+    </List>
+  </Box>;
 
   if (itemStatus === "failed") {
     return (
@@ -195,6 +246,24 @@ const ItemsPage = () => {
             </ListItem>
           ))}
         </List>
+        {addItemError && (
+          <Snackbar
+            open={alertOpen}
+            onClose={() => setAlertOpen(false)}
+            autoHideDuration={5000}
+          >
+            <Alert severity="error">{addItemError}</Alert>
+          </Snackbar>
+        )}
+        {itemError && (
+          <Snackbar
+            open={alertOpen}
+            onClose={() => setAlertOpen(false)}
+            autoHideDuration={5000}
+          >
+            <Alert severity="error">{itemError}</Alert>
+          </Snackbar>
+        )}
         {addItemError && (
           <Snackbar
             open={alertOpen}
