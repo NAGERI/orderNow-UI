@@ -33,6 +33,11 @@ const NavBar = () => {
           <Button color="inherit" onClick={() => handleNavigation("/orders")}>
             Orders
           </Button>
+          {user?.role === "ADMIN" && (
+            <Button color="inherit" onClick={() => handleNavigation("/users")}>
+              Manage Users
+            </Button>
+          )}
         </Typography>
         <Box>
           {user ? (

@@ -16,6 +16,7 @@ import Layout from "./components/Layout";
 import PrivateRoute from "./components/PrivateRoute";
 import { fetchUser } from "./store/userSlice";
 import ItemsPage from "./pages/ItemsPage";
+import UserPage from "./pages/UserPage";
 
 const AppRouter = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const AppRouter = () => {
             <Route path="/stores/:storeId/items" element={<ItemsPage />} />
             <Route path="/stores" element={<StoresPage />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/users" element={<UserPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" />} />
